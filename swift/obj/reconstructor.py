@@ -42,7 +42,7 @@ from swift.common.http import HTTP_OK, HTTP_NOT_FOUND, \
     HTTP_INSUFFICIENT_STORAGE
 from swift.obj.diskfile import DiskFileRouter, get_data_dir, \
     get_tmp_dir
-from swift.common.storage_policy import POLICIES, EC_POLICY
+from swift.common.storage_policy import POLICIES, EC_POLICY, COMP_POLICY
 from swift.common.exceptions import ConnectionTimeout, DiskFileError, \
     SuffixSyncError
 

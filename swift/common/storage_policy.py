@@ -27,9 +27,9 @@ from pyeclib.ec_iface import ECDriver, ECDriverError, VALID_EC_TYPES
 LEGACY_POLICY_NAME = 'Policy-0'
 VALID_CHARS = '-' + string.ascii_letters + string.digits
 
-DEFAULT_POLICY_TYPE = REPL_POLICY = 'replication'
+REPL_POLICY = 'replication'
 EC_POLICY = 'erasure_coding'
-COMP_POLICY = 'image_compression'
+DEFAULT_POLICY_TYPE = COMP_POLICY = 'image_compression'
 
 DEFAULT_EC_OBJECT_SEGMENT_SIZE = 1048576
 
@@ -597,7 +597,7 @@ class ECStoragePolicy(BaseStoragePolicy):
             validation_hook=validate_ring_data)
 
 @BaseStoragePolicy.register(COMP_POLICY)
-class COMPStoragePolicy(BaseStoragePolicy):
+class CompressedStoragePolicy(BaseStoragePolicy):
   """
   Represents a storage policy of type 'replication'.  Default storage policy
   class unless otherwise overridden from swift.conf.

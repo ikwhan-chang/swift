@@ -3229,11 +3229,11 @@ class ECDiskFileManager(BaseDiskFileManager):
 
 
 
-class COMPDiskFileReader(BaseDiskFileReader):
+class CompressedDiskFileReader(BaseDiskFileReader):
   pass
 
 
-class COMPDiskFileWriter(BaseDiskFileWriter):
+class CompressedDiskFileWriter(BaseDiskFileWriter):
   def put(self, metadata):
     """
     Finalize writing the file on disk.
@@ -3244,7 +3244,7 @@ class COMPDiskFileWriter(BaseDiskFileWriter):
     super(DiskFileWriter, self)._put(metadata, True)
 
 
-class COMPDiskFile(BaseDiskFile):
+class CompressedDiskFile(BaseDiskFile):
   reader_cls = DiskFileReader
   writer_cls = DiskFileWriter
 
@@ -3254,7 +3254,7 @@ class COMPDiskFile(BaseDiskFile):
 
 
 @DiskFileRouter.register(COMP_POLICY)
-class COMPDiskFileManager(BaseDiskFileManager):
+class CompressedDiskFileManager(BaseDiskFileManager):
   diskfile_cls = DiskFile
 
   def _process_ondisk_files(self, exts, results, **kwargs):
