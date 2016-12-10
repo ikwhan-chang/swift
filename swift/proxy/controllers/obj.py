@@ -2811,13 +2811,13 @@ class CompressedObjectController(BaseObjectController):
 
       img = Image.open("/var/tmp/temp2.jpg")
 
-      fh = open("/var/tmp/temp2.jpg",'r')
+      fh2 = open("/var/tmp/temp2.jpg",'r')
       print "Chunk Size:"
       print self.app.client_chunk_size
       #print fh.read(self.app.client_chunk_size)
       def reader():
         try:
-          chunk = fh.read(
+          chunk = fh2.read(
             self.app.client_chunk_size)
           return chunk
         except (IOError) as e:
