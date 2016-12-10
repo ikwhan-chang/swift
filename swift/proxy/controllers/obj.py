@@ -2686,6 +2686,7 @@ class CompressedObjectController(BaseObjectController):
     bytes_transferred = 0
 
     def send_chunk(chunk):
+
       for putter in list(putters):
         if not putter.failed:
           putter.send_chunk(chunk)

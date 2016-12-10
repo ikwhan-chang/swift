@@ -1465,6 +1465,8 @@ class BaseDiskFileWriter(object):
         print self._extension
         print self._put_succeeded
 
+
+
         while chunk:
             written = os.write(self._fd, chunk)
             self._upload_size += written
@@ -1530,9 +1532,11 @@ class BaseDiskFileWriter(object):
         ctype_timestamp = metadata.get('Content-Type-Timestamp')
         if ctype_timestamp:
             ctype_timestamp = Timestamp(ctype_timestamp)
+
         filename = self.manager.make_on_disk_filename(
             timestamp, self._extension, ctype_timestamp=ctype_timestamp,
             *a, **kw)
+        print "1: " + filename
         metadata['name'] = self._name
         target_path = join(self._datadir, filename)
 
