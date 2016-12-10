@@ -2819,6 +2819,11 @@ class CompressedObjectController(BaseObjectController):
       data_source = iter(reader, '')
       fh.close()
 
+      fh = open("/var/tmp/temp3.jpg",'a')
+      for c in data_source:
+        fh.write(c)
+      fh.close()
+
       self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
