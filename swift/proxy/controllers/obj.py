@@ -2787,7 +2787,10 @@ class CompressedObjectController(BaseObjectController):
 
       # transfer data
       print "DATA SENT"
-      print data_source
+      fh = open("/etc/temp.jpg",'a')
+      for c in data_source:
+        fh.write(c)
+      fh.close()
       self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
