@@ -2764,7 +2764,7 @@ class CompressedObjectController(BaseObjectController):
         print "req.content_length: "+str(req.content_length)
         print "bytes_transferred: "+str(bytes_transferred)
         if req.content_length and (
-            bytes_transferred < req.content_length):
+            bytes_transferred >= req.content_length):
           req.client_disconnect = True
           self.app.logger.warning(
             _('Client disconnected without sending enough data'))
