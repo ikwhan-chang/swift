@@ -1505,6 +1505,15 @@ class BaseDiskFileWriter(object):
         # unnecessary os.unlink() of tempfile later. As renamer() has
         # succeeded, the tempfile would no longer exist at its original path.
         print "Target Path:" + target_path
+
+        for m in metadata:
+        print "m: "+str(m)
+
+        ##
+
+
+        ##
+
         self._put_succeeded = True
         if cleanup:
             try:
@@ -1536,8 +1545,7 @@ class BaseDiskFileWriter(object):
             timestamp, self._extension, ctype_timestamp=ctype_timestamp,
             *a, **kw)
         print "1: " + filename
-        for m in metadata:
-          print "m: "+str(m)
+
         metadata['name'] = self._name
         target_path = join(self._datadir, filename)
 
