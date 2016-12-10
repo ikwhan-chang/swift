@@ -671,13 +671,40 @@ class BaseObjectController(Controller):
 
         self._update_x_timestamp(req)
 
+        print "DATA SENT"
+
+        # 1
+
+
+        # 2
+        fh = open("/var/tmp/temp.jpg",'a')
+        fh.write(req.environ['wsgi.input'].read)
+        #for c in data_source:
+        #  fh.write(c)
+        fh.close()
+
+        # 3
+        # Load image
+        img = Image.open("/var/tmp/temp.jpg")
+        size = os.stat("/var/tmp/temp.jpg").st_size
+
+        #print "Original image file [{filename}] size = {size} bytes".format(filename=image_file, size=str(size))
+
+        # Save the compressed image
+        #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
+        img.save("/var/tmp/temp2.jpg", optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+        #size = os.stat(compressed_image_file).st_size
+        #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
+        fh2 = open("/var/tmp/temp2.jpg",'r')
         def reader():
-            try:
-                return req.environ['wsgi.input'].read(
-                    self.app.client_chunk_size)
-            except (ValueError, IOError) as e:
-                raise ChunkReadError(str(e))
+          try:
+            chunk = fh2.read(
+              self.app.client_chunk_size)
+            return chunk
+          except (IOError) as e:
+            raise ChunkReadError(str(e))
         data_source = iter(reader, '')
+
 
         # check if object is set to be automatically deleted (i.e. expired)
         req, delete_at_container, delete_at_part, \
@@ -2791,36 +2818,8 @@ class CompressedObjectController(BaseObjectController):
       self._check_failure_put_connections(putters, req, min_conns)
 
       # transfer data
-      print "DATA SENT"
-      fh = open("/var/tmp/temp.jpg",'a')
-      for c in data_source:
-        fh.write(c)
-      fh.close()
 
-      # Load image
-      img = Image.open("/var/tmp/temp.jpg")
-      size = os.stat("/var/tmp/temp.jpg").st_size
-
-      #print "Original image file [{filename}] size = {size} bytes".format(filename=image_file, size=str(size))
-
-      # Save the compressed image
-      #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-      img.save("/var/tmp/temp2.jpg", optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-      #size = os.stat(compressed_image_file).st_size
-      #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
-      fh2 = open("/var/tmp/temp2.jpg",'r')
-      print "Chunk Size:"
-      print self.app.client_chunk_size
-      #print fh.read(self.app.client_chunk_size)
-      def reader():
-        try:
-          chunk = fh2.read(
-            self.app.client_chunk_size)
-          return chunk
-        except (IOError) as e:
-          raise ChunkReadError(str(e))
-      data_source2 = iter(reader, '')
-      self._transfer_data(req, data_source2, putters, nodes)
+      self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
       statuses, reasons, bodies, etags = \
