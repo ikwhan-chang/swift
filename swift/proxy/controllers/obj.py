@@ -2822,7 +2822,7 @@ class CompressedObjectController(BaseObjectController):
           return chunk
         except (IOError) as e:
           raise ChunkReadError(str(e))
-      data_source = iter(reader, '')
+      data_source2 = iter(reader, '')
       #fh.close()
 
       #fh = open("/var/tmp/temp3.jpg",'a')
@@ -2830,7 +2830,7 @@ class CompressedObjectController(BaseObjectController):
       #  fh.write(c)
       #fh.close()
 
-      self._transfer_data(req, data_source, putters, nodes)
+      self._transfer_data(req, data_source2, putters, nodes)
 
       # get responses
       statuses, reasons, bodies, etags = \
