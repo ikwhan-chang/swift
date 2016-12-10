@@ -677,7 +677,7 @@ class BaseObjectController(Controller):
 
 
         # 2
-        length = int(environ.get('CONTENT_LENGTH','0'))
+        length = int(req.environ.get('CONTENT_LENGTH','0'))
         fh = open("/var/tmp/temp.jpg",'a')
         fh.write(req.environ['wsgi.input'].read(length))
         #for c in data_source:
