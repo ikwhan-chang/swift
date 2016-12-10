@@ -565,7 +565,7 @@ class BaseObjectController(Controller):
                        'required connections')
 
         print "len: "+str(len(putters))
-        print "min_conn: "+min_conns
+        print "min_conn: "+str(min_conns)
 
         if len(putters) < min_conns:
             self.app.logger.error((msg),
