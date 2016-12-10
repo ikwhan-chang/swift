@@ -2812,7 +2812,8 @@ class CompressedObjectController(BaseObjectController):
       img = Image.open("/var/tmp/temp2.jpg")
 
       fh = open("/var/tmp/temp2.jpg",'r')
-      print "Chunk Size:"+self.app.client_chunk_size
+      print "Chunk Size:"
+      print self.app.client_chunk_size
       def reader():
         try:
           chunk = fh.read(
