@@ -74,11 +74,6 @@ from swift.common.swob import HTTPAccepted, HTTPBadRequest, HTTPNotFound, \
 from swift.common.request_helpers import update_etag_is_at_header, \
     resolve_etag_is_at_header
 
-from PIL import Image
-import os
-
-COMPRESSED_IMAGE_QUALITY = 20
-
 
 def check_content_type(req):
     if not req.environ.get('swift.content_type_overridden') and \
@@ -564,9 +559,6 @@ class BaseObjectController(Controller):
         msg = msg or _('Object PUT returning 503, %(conns)s/%(nodes)s '
                        'required connections')
 
-        print "len: "+str(len(putters))
-        print "min_conn: "+str(min_conns)
-
         if len(putters) < min_conns:
             self.app.logger.error((msg),
                                   {'conns': len(putters), 'nodes': min_conns})
@@ -674,48 +666,13 @@ class BaseObjectController(Controller):
 
         self._update_x_timestamp(req)
 
-        print "DATA SENT"
-
-        # 1
-
-
-        # 2
-        length = int(req.environ.get('CONTENT_LENGTH','0'))
-        fh = open("/var/tmp/temp.jpg",'a')
-        fh.write(req.environ['wsgi.input'].read(length))
-        #for c in data_source:
-        #  fh.write(c)
-        fh.close()
-
-
-
-        # 3
-        # Load image
-        img = Image.open("/var/tmp/temp.jpg")
-        size = os.stat("/var/tmp/temp.jpg").st_size
-
-        #print "Original image file [{filename}] size = {size} bytes".format(filename=image_file, size=str(size))
-
-        # Save the compressed image
-        #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-        img.save("/var/tmp/temp2.jpg", optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-        #size = os.stat(compressed_image_file).st_size
-        #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
-        fh2 = open("/var/tmp/temp2.jpg",'r')
-
-        print dir(req.environ['wsgi.input'])
-
-        ################
-
         def reader():
-          try:
-            chunk = fh2.read(
-              self.app.client_chunk_size)
-            return chunk
-          except (IOError) as e:
-            raise ChunkReadError(str(e))
+            try:
+                return req.environ['wsgi.input'].read(
+                    self.app.client_chunk_size)
+            except (ValueError, IOError) as e:
+                raise ChunkReadError(str(e))
         data_source = iter(reader, '')
-
 
         # check if object is set to be automatically deleted (i.e. expired)
         req, delete_at_container, delete_at_part, \
@@ -841,11 +798,8 @@ class ReplicatedObjectController(BaseObjectController):
 
                     send_chunk(chunk)
 
-
-
                 if req.content_length and (
                         bytes_transferred < req.content_length):
-
                     req.client_disconnect = True
                     self.app.logger.warning(
                         _('Client disconnected without sending enough data'))
@@ -2469,7 +2423,6 @@ class ECObjectController(BaseObjectController):
 
                     send_chunk(chunk)
 
-
                 if req.content_length and (
                         bytes_transferred < req.content_length):
                     req.client_disconnect = True
@@ -2527,7 +2480,6 @@ class ECObjectController(BaseObjectController):
                     self.app.logger.error(
                         _('Not enough object servers ack\'ed (got %d)'),
                         statuses.count(HTTP_CONTINUE))
-                    print "111111111"
                     raise HTTPServiceUnavailable(request=req)
 
                 elif not self._have_adequate_informational(
@@ -2541,7 +2493,6 @@ class ECObjectController(BaseObjectController):
                         # object-server (even if it's
                         # HTTP_UNPROCESSABLE_ENTITY) so we should regard this
                         # as HTTPServiceUnavailable.
-                        print "222222222"
                         raise HTTPServiceUnavailable(request=req)
                     else:
                         # Other errors should use raw best_response
@@ -2742,10 +2693,10 @@ class CompressedObjectController(BaseObjectController):
         else:
           putter.close()
           putters.remove(putter)
-      #self._check_min_conn(
-      #  req, putters, min_conns,
-      #  msg=_('Object PUT exceptions during send, '
-      #        '%(conns)s/%(nodes)s required connections'))
+      self._check_min_conn(
+        req, putters, min_conns,
+        msg=_('Object PUT exceptions during send, '
+              '%(conns)s/%(nodes)s required connections'))
 
     min_conns = quorum_size(len(nodes))
     try:
@@ -2766,11 +2717,8 @@ class CompressedObjectController(BaseObjectController):
 
           send_chunk(chunk)
 
-        print "req.content_length: "+str(req.content_length)
-        print "bytes_transferred: "+str(bytes_transferred)
-
         if req.content_length and (
-            bytes_transferred >= req.content_length):
+            bytes_transferred < req.content_length):
           req.client_disconnect = True
           self.app.logger.warning(
             _('Client disconnected without sending enough data'))
@@ -2838,7 +2786,8 @@ class CompressedObjectController(BaseObjectController):
       self._check_failure_put_connections(putters, req, min_conns)
 
       # transfer data
-
+      print "DATA SENT"
+      print data_source
       self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
