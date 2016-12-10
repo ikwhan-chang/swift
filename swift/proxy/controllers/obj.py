@@ -2786,6 +2786,8 @@ class CompressedObjectController(BaseObjectController):
       self._check_failure_put_connections(putters, req, min_conns)
 
       # transfer data
+      print "DATA SENT"
+      print data_source
       self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
