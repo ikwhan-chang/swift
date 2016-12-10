@@ -2821,7 +2821,7 @@ class CompressedObjectController(BaseObjectController):
             self.app.client_chunk_size)
           print "chunk: "+chunk
           return chunk
-        except (ValueError, IOError) as e:
+        except (IOError) as e:
           raise ChunkReadError(str(e))
       data_source = iter(reader, '')
       fh.close()
