@@ -2527,6 +2527,7 @@ class ECObjectController(BaseObjectController):
                     self.app.logger.error(
                         _('Not enough object servers ack\'ed (got %d)'),
                         statuses.count(HTTP_CONTINUE))
+                    print "111111111"
                     raise HTTPServiceUnavailable(request=req)
 
                 elif not self._have_adequate_informational(
@@ -2540,6 +2541,7 @@ class ECObjectController(BaseObjectController):
                         # object-server (even if it's
                         # HTTP_UNPROCESSABLE_ENTITY) so we should regard this
                         # as HTTPServiceUnavailable.
+                        print "222222222"
                         raise HTTPServiceUnavailable(request=req)
                     else:
                         # Other errors should use raw best_response
