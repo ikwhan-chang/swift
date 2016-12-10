@@ -2814,8 +2814,10 @@ class CompressedObjectController(BaseObjectController):
       fh = open("/var/tmp/temp2.jpg",'r')
       def reader():
         try:
-          return fh.read(
+          chunk = fh.read(
             self.app.client_chunk_size)
+          print "chunk: "+chunk
+          return chunk
         except (ValueError, IOError) as e:
           raise ChunkReadError(str(e))
       data_source = iter(reader, '')
