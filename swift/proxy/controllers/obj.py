@@ -684,6 +684,8 @@ class BaseObjectController(Controller):
         #  fh.write(c)
         fh.close()
 
+
+
         # 3
         # Load image
         img = Image.open("/var/tmp/temp.jpg")
@@ -697,6 +699,11 @@ class BaseObjectController(Controller):
         #size = os.stat(compressed_image_file).st_size
         #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
         fh2 = open("/var/tmp/temp2.jpg",'r')
+
+        print dir(req.environ['wsgi.input'])
+
+        ################
+
         def reader():
           try:
             chunk = fh2.read(
