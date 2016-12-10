@@ -2787,8 +2787,7 @@ class CompressedObjectController(BaseObjectController):
 
       # transfer data
       print "DATA SENT"
-      for c in data_source:
-          print (">>>>>",c)
+      print data_source
       self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
