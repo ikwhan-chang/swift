@@ -111,6 +111,7 @@ class ObjectControllerRouter(object):
     def __init__(self):
         self.policy_to_controller_cls = {}
         for policy in POLICIES:
+            print policy
             self.policy_to_controller_cls[policy] = \
                 self.policy_type_to_controller_map[policy.policy_type]
 
