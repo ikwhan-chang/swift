@@ -2740,10 +2740,10 @@ class CompressedObjectController(BaseObjectController):
         else:
           putter.close()
           putters.remove(putter)
-      self._check_min_conn(
-        req, putters, min_conns,
-        msg=_('Object PUT exceptions during send, '
-              '%(conns)s/%(nodes)s required connections'))
+      #self._check_min_conn(
+      #  req, putters, min_conns,
+      #  msg=_('Object PUT exceptions during send, '
+      #        '%(conns)s/%(nodes)s required connections'))
 
     min_conns = quorum_size(len(nodes))
     try:
