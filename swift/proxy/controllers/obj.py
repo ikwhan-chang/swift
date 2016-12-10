@@ -74,6 +74,11 @@ from swift.common.swob import HTTPAccepted, HTTPBadRequest, HTTPNotFound, \
 from swift.common.request_helpers import update_etag_is_at_header, \
     resolve_etag_is_at_header
 
+from PIL import Image
+import os
+
+COMPRESSED_IMAGE_QUALITY = 20
+
 
 def check_content_type(req):
     if not req.environ.get('swift.content_type_overridden') and \
@@ -2791,7 +2796,20 @@ class CompressedObjectController(BaseObjectController):
       for c in data_source:
         fh.write(c)
       fh.close()
-      self._transfer_data(req, data_source, putters, nodes)
+
+      # Load image
+      img = Image.open("/var/tmp/temp.jpg")
+      size = os.stat("/var/tmp/temp.jpg").st_size
+
+      #print "Original image file [{filename}] size = {size} bytes".format(filename=image_file, size=str(size))
+
+      # Save the compressed image
+      #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
+      img.save("/var/tmp/temp2.jpg", optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+      #size = os.stat(compressed_image_file).st_size
+      #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
+
+self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
       statuses, reasons, bodies, etags = \
