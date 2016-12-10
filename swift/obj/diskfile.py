@@ -1535,7 +1535,7 @@ class BaseDiskFileWriter(object):
             timestamp, self._extension, ctype_timestamp=ctype_timestamp,
             *a, **kw)
         print "1: " + filename
-        for m in metadata
+        for m in metadata:
           print "m: "+str(m)
         metadata['name'] = self._name
         target_path = join(self._datadir, filename)
