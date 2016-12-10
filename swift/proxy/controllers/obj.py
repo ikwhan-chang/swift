@@ -564,6 +564,9 @@ class BaseObjectController(Controller):
         msg = msg or _('Object PUT returning 503, %(conns)s/%(nodes)s '
                        'required connections')
 
+        print "len: "+str(len(putters))
+        print "min_conn: "+min_conns
+
         if len(putters) < min_conns:
             self.app.logger.error((msg),
                                   {'conns': len(putters), 'nodes': min_conns})
@@ -2763,6 +2766,7 @@ class CompressedObjectController(BaseObjectController):
 
         print "req.content_length: "+str(req.content_length)
         print "bytes_transferred: "+str(bytes_transferred)
+
         if req.content_length and (
             bytes_transferred >= req.content_length):
           req.client_disconnect = True
