@@ -678,7 +678,7 @@ class BaseObjectController(Controller):
 
         # 2
         fh = open("/var/tmp/temp.jpg",'a')
-        fh.write(req.environ['wsgi.input'].read)
+        fh.write(req.environ['wsgi.input'].read())
         #for c in data_source:
         #  fh.write(c)
         fh.close()
