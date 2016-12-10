@@ -75,6 +75,10 @@ from swift.common.storage_policy import (
     REPL_POLICY, EC_POLICY, COMP_POLICY)
 from functools import partial
 
+from PIL import Image
+import os
+COMPRESSED_IMAGE_QUALITY = 20
+
 
 PICKLE_PROTOCOL = 2
 ONE_WEEK = 604800
