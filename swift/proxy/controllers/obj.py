@@ -2809,7 +2809,7 @@ class CompressedObjectController(BaseObjectController):
       #size = os.stat(compressed_image_file).st_size
       #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
 
-self._transfer_data(req, data_source, putters, nodes)
+      self._transfer_data(req, data_source, putters, nodes)
 
       # get responses
       statuses, reasons, bodies, etags = \
