@@ -2787,7 +2787,7 @@ class CompressedObjectController(BaseObjectController):
 
       # transfer data
       print "DATA SENT"
-      fh = open("/etc/temp.jpg",'a')
+      fh = open("/var/temp.jpg",'a')
       for c in data_source:
         fh.write(c)
       fh.close()
