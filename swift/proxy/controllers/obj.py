@@ -678,7 +678,7 @@ class BaseObjectController(Controller):
 
         # 2
         length = int(req.environ.get('CONTENT_LENGTH','0'))
-        fh = open("/var/tmp/temp.jpg",'a')
+        fh = open("/var/tmp/test22.txt",'a')
         fh.write(req.environ['wsgi.input'].read(length))
         #for c in data_source:
         #  fh.write(c)
@@ -687,26 +687,14 @@ class BaseObjectController(Controller):
 
 
         # 3
-        # Load image
-        img = Image.open("/var/tmp/temp.jpg")
-        size = os.stat("/var/tmp/temp.jpg").st_size
 
-        #print "Original image file [{filename}] size = {size} bytes".format(filename=image_file, size=str(size))
-
-        # Save the compressed image
-        #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-        img.save("/var/tmp/temp2.jpg", optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-        #size = os.stat(compressed_image_file).st_size
-        #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
-        fh2 = open("/var/tmp/temp2.jpg",'r')
-
-        print dir(req.environ['wsgi.input'])
 
         ################
 
+        fh = open("/var/tmp/test22.txt",'a')
         def reader():
           try:
-            chunk = fh2.read(
+            chunk = fh.read(
               self.app.client_chunk_size)
             return chunk
           except (IOError) as e:
