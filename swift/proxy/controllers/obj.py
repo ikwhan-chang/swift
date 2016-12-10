@@ -2824,7 +2824,7 @@ class CompressedObjectController(BaseObjectController):
         except (IOError) as e:
           raise ChunkReadError(str(e))
       data_source = iter(reader, '')
-      fh.close()
+      #fh.close()
 
       #fh = open("/var/tmp/temp3.jpg",'a')
       #for c in data_source:
