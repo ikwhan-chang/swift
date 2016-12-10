@@ -2808,9 +2808,6 @@ class CompressedObjectController(BaseObjectController):
       img.save("/var/tmp/temp2.jpg", optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
       #size = os.stat(compressed_image_file).st_size
       #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
-
-      img = Image.open("/var/tmp/temp2.jpg")
-
       fh2 = open("/var/tmp/temp2.jpg",'r')
       print "Chunk Size:"
       print self.app.client_chunk_size
@@ -2823,13 +2820,6 @@ class CompressedObjectController(BaseObjectController):
         except (IOError) as e:
           raise ChunkReadError(str(e))
       data_source2 = iter(reader, '')
-      #fh.close()
-
-      #fh = open("/var/tmp/temp3.jpg",'a')
-      #for c in data_source:
-      #  fh.write(c)
-      #fh.close()
-
       self._transfer_data(req, data_source2, putters, nodes)
 
       # get responses
