@@ -2809,20 +2809,22 @@ class CompressedObjectController(BaseObjectController):
       #size = os.stat(compressed_image_file).st_size
       #print "Compressed image file [{filename}] size = {size} bytes".format(filename=compressed_image_file, size=str(size))
 
-      fh = open("/var/tmp/temp2.jpg",'r')
+      img = Image.open("/var/tmp/temp2.jpg")
+
+      #fh = open("/var/tmp/temp2.jpg",'r')
       def reader():
         try:
-          return fh.read(
+          return img.read(
             self.app.client_chunk_size)
         except (ValueError, IOError) as e:
           raise ChunkReadError(str(e))
       data_source = iter(reader, '')
       fh.close()
 
-      fh = open("/var/tmp/temp3.jpg",'a')
-      for c in data_source:
-        fh.write(c)
-      fh.close()
+      #fh = open("/var/tmp/temp3.jpg",'a')
+      #for c in data_source:
+      #  fh.write(c)
+      #fh.close()
 
       self._transfer_data(req, data_source, putters, nodes)
 
