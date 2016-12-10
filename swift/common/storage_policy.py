@@ -29,6 +29,7 @@ VALID_CHARS = '-' + string.ascii_letters + string.digits
 
 DEFAULT_POLICY_TYPE = REPL_POLICY = 'replication'
 EC_POLICY = 'erasure_coding'
+COMP_POLICY = 'image_compression'
 
 DEFAULT_EC_OBJECT_SEGMENT_SIZE = 1048576
 
@@ -594,6 +595,27 @@ class ECStoragePolicy(BaseStoragePolicy):
         self.object_ring = Ring(
             swift_dir, ring_name=self.ring_name,
             validation_hook=validate_ring_data)
+
+@BaseStoragePolicy.register(COMP_POLICY)
+class COMPStoragePolicy(BaseStoragePolicy):
+  """
+  Represents a storage policy of type 'replication'.  Default storage policy
+  class unless otherwise overridden from swift.conf.
+
+  Not meant to be instantiated directly; use
+  :func:`~swift.common.storage_policy.reload_storage_policies` to load
+  POLICIES from ``swift.conf``.
+  """
+
+  @property
+  def quorum(self):
+    """
+    Quorum concept in the replication case:
+        floor(number of replica / 2) + 1
+    """
+    if not self.object_ring:
+      raise PolicyError('Ring is not loaded')
+    return quorum_size(self.object_ring.replica_count)
 
 
 class StoragePolicyCollection(object):

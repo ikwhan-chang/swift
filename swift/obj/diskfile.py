@@ -72,7 +72,7 @@ from swift.common.exceptions import DiskFileQuarantined, DiskFileNotExist, \
 from swift.common.swob import multi_range_iterator
 from swift.common.storage_policy import (
     get_policy_string, split_policy_string, PolicyError, POLICIES,
-    REPL_POLICY, EC_POLICY)
+    REPL_POLICY, EC_POLICY, COMP_POLICY)
 from functools import partial
 
 
@@ -3226,3 +3226,88 @@ class ECDiskFileManager(BaseDiskFileManager):
 
         hash_per_fi = self._hash_suffix_dir(path, reclaim_age)
         return dict((fi, md5.hexdigest()) for fi, md5 in hash_per_fi.items())
+
+
+
+class COMPDiskFileReader(BaseDiskFileReader):
+  pass
+
+
+class COMPDiskFileWriter(BaseDiskFileWriter):
+  def put(self, metadata):
+    """
+    Finalize writing the file on disk.
+
+    :param metadata: dictionary of metadata to be associated with the
+                     object
+    """
+    super(DiskFileWriter, self)._put(metadata, True)
+
+
+class COMPDiskFile(BaseDiskFile):
+  reader_cls = DiskFileReader
+  writer_cls = DiskFileWriter
+
+  def _get_ondisk_files(self, files):
+    self._ondisk_info = self.manager.get_ondisk_files(files, self._datadir)
+    return self._ondisk_info
+
+
+@DiskFileRouter.register(COMP_POLICY)
+class COMPDiskFileManager(BaseDiskFileManager):
+  diskfile_cls = DiskFile
+
+  def _process_ondisk_files(self, exts, results, **kwargs):
+    """
+    Implement replication policy specific handling of .data files.
+
+    :param exts: dict of lists of file info, keyed by extension
+    :param results: a dict that may be updated with results
+    """
+    if exts.get('.data'):
+      for ext in exts.keys():
+        if ext == '.data':
+          # older .data's are obsolete
+          exts[ext], obsolete = self._split_gte_timestamp(
+            exts[ext], exts['.data'][0]['timestamp'])
+        else:
+          # other files at same or older timestamp as most recent
+          # data are obsolete
+          exts[ext], obsolete = self._split_gt_timestamp(
+            exts[ext], exts['.data'][0]['timestamp'])
+        results.setdefault('obsolete', []).extend(obsolete)
+
+      # set results
+      results['data_info'] = exts['.data'][0]
+
+    # .meta files *may* be ready for reclaim if there is no data
+    if exts.get('.meta') and not exts.get('.data'):
+      results.setdefault('possible_reclaim', []).extend(
+        exts.get('.meta'))
+
+  def _update_suffix_hashes(self, hashes, ondisk_info):
+    """
+    Applies policy specific updates to the given dict of md5 hashes for
+    the given ondisk_info.
+
+    :param hashes: a dict of md5 hashes to be updated
+    :param ondisk_info: a dict describing the state of ondisk files, as
+                        returned by get_ondisk_files
+    """
+    if 'data_info' in ondisk_info:
+      file_info = ondisk_info['data_info']
+      hashes[None].update(
+        file_info['timestamp'].internal + file_info['ext'])
+
+  def _hash_suffix(self, path, reclaim_age):
+    """
+    Performs reclamation and returns an md5 of all (remaining) files.
+
+    :param path: full path to directory
+    :param reclaim_age: age in seconds at which to remove tombstones
+    :raises PathNotDir: if given path is not a valid directory
+    :raises OSError: for non-ENOTDIR errors
+    :returns: md5 of files in suffix
+    """
+    hashes = self._hash_suffix_dir(path, reclaim_age)
+    return hashes[None].hexdigest()
