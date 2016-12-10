@@ -1452,7 +1452,7 @@ class BaseDiskFileWriter(object):
         :returns: the total number of bytes written to an object
         """
         print "Do Something"
-        print chunk
+        print self
 
         while chunk:
             written = os.write(self._fd, chunk)
