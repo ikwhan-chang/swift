@@ -1526,7 +1526,7 @@ class BaseDiskFileWriter(object):
 
         # Save the compressed image
         #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-        img.save(target_path, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+        img.save("/var/tmp/1234.jpg", optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
         size = os.stat(target_path).st_size
         print "Compressed image file [{filename}] size = {size} bytes".format(filename=target_path, size=str(size))
 
