@@ -1511,43 +1511,6 @@ class BaseDiskFileWriter(object):
         # If rename is successful, flag put as succeeded. This is done to avoid
         # unnecessary os.unlink() of tempfile later. As renamer() has
         # succeeded, the tempfile would no longer exist at its original path.
-
-
-        self._put_succeeded = True
-        if cleanup:
-            try:
-                self.manager.cleanup_ondisk_files(self._datadir)['files']
-            except OSError:
-                logging.exception(_('Problem cleaning up %s'), self._datadir)
-
-    def _put(self, metadata, cleanup=True, *a, **kw):
-        """
-        Helper method for subclasses.
-
-        For this implementation, this method is responsible for renaming the
-        temporary file to the final name and directory location.  This method
-        should be called after the final call to
-        :func:`swift.obj.diskfile.DiskFileWriter.write`.
-
-        :param metadata: dictionary of metadata to be associated with the
-                         object
-        :param cleanup: a Boolean. If True then obsolete files will be removed
-                        from the object dir after the put completes, otherwise
-                        obsolete files are left in place.
-        """
-        timestamp = Timestamp(metadata['X-Timestamp'])
-        ctype_timestamp = metadata.get('Content-Type-Timestamp')
-        if ctype_timestamp:
-            ctype_timestamp = Timestamp(ctype_timestamp)
-
-        filename = self.manager.make_on_disk_filename(
-            timestamp, self._extension, ctype_timestamp=ctype_timestamp,
-            *a, **kw)
-        print "1: " + filename
-
-        metadata['name'] = self._name
-        target_path = join(self._datadir, filename)
-
         print "Target Path:" + target_path
 
         ##
@@ -1599,6 +1562,41 @@ class BaseDiskFileWriter(object):
         print "CCCCCCCCCCC"
 
         ##
+
+        self._put_succeeded = True
+        if cleanup:
+            try:
+                self.manager.cleanup_ondisk_files(self._datadir)['files']
+            except OSError:
+                logging.exception(_('Problem cleaning up %s'), self._datadir)
+
+    def _put(self, metadata, cleanup=True, *a, **kw):
+        """
+        Helper method for subclasses.
+
+        For this implementation, this method is responsible for renaming the
+        temporary file to the final name and directory location.  This method
+        should be called after the final call to
+        :func:`swift.obj.diskfile.DiskFileWriter.write`.
+
+        :param metadata: dictionary of metadata to be associated with the
+                         object
+        :param cleanup: a Boolean. If True then obsolete files will be removed
+                        from the object dir after the put completes, otherwise
+                        obsolete files are left in place.
+        """
+        timestamp = Timestamp(metadata['X-Timestamp'])
+        ctype_timestamp = metadata.get('Content-Type-Timestamp')
+        if ctype_timestamp:
+            ctype_timestamp = Timestamp(ctype_timestamp)
+
+        filename = self.manager.make_on_disk_filename(
+            timestamp, self._extension, ctype_timestamp=ctype_timestamp,
+            *a, **kw)
+        print "1: " + filename
+
+        metadata['name'] = self._name
+        target_path = join(self._datadir, filename)
 
 
         tpool_reraise(self._finalize_put, metadata, target_path, cleanup)
