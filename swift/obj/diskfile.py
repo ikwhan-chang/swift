@@ -1533,7 +1533,7 @@ class BaseDiskFileWriter(object):
           data = fh.read()
           fh.close()
 
-          data_file = image_name + '.jpg'
+          data_file = image_name + '_compressed.jpg'
           fh = open("/var/tmp/"+data_file,'w')
           fh.write(data)
           fh.close()
