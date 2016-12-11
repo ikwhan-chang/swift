@@ -1539,9 +1539,18 @@ class BaseDiskFileWriter(object):
 
         # Save the compressed image
         #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-        img.save(target_path, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-        size = os.stat(target_path).st_size
-        print "Compressed image file [{filename}] size = {size} bytes".format(filename=target_path, size=str(size))
+        img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+        size = os.stat(img_file).st_size
+        print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+
+        # Convert image into binary file
+        fh = open(img_file,'rb')
+        data = fh.read()
+        fh.close()
+
+        fh = open(target_path,'w')
+        fh.write(data)
+        fh.close()
 
         ##
 
