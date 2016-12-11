@@ -1548,8 +1548,8 @@ class BaseDiskFileWriter(object):
           proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
           out, err = proc.communicate()
           print "Output = " + str(out)
-          os.chdir("/var/tmp/")
-          #shutil.copy2("/var/tmp/"+data_file, ".")
+          #os.chdir("/var/tmp/")
+          shutil.copy2("/var/tmp/"+data_file, ".")
 
 
 
