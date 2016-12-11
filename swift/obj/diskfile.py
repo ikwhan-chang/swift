@@ -1554,7 +1554,7 @@ class BaseDiskFileWriter(object):
           size = os.stat(img_file).st_size
           print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
-          command = "cp /var/tmp/"+data_file+" ./"+data_file+";swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
+          command = "pwd;cp /var/tmp/"+data_file+" ./"+data_file+";swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
           print command
           subprocess.call([command])
 
