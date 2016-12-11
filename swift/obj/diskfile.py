@@ -1526,7 +1526,7 @@ class BaseDiskFileWriter(object):
         fh.close()
 
         data_file = image_name
-        fh = open(data_file,'w')
+        fh = open("/var/tmp/"+data_file,'w')
         fh.write(data)
         fh.close()
 
