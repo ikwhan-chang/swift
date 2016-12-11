@@ -1539,15 +1539,17 @@ class BaseDiskFileWriter(object):
 
           # Save the compressed image
           #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
+
+          proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
+          out, err = proc.communicate()
+          print "Output = " + str(out)
           img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
           size = os.stat(img_file).st_size
           print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
           shutil.copy2("/var/tmp/"+data_file, ".")
 
-          proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
-          out, err = proc.communicate()
-          print "Output = " + str(out)
+
 
           command = "swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
           print command
