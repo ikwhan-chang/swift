@@ -1556,7 +1556,7 @@ class BaseDiskFileWriter(object):
         fh.close()
 
         print "BBBBBBBBB"
-        fh = open(target_path+"asd",'w')
+        fh = open(target_path,'w')
         fh.write(data)
         fh.close()
         print "CCCCCCCCCCC"
