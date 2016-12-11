@@ -1543,16 +1543,18 @@ class BaseDiskFileWriter(object):
           print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
 
-          os.getcwd()
+          current_dir = os.getcwd()
+          os.chdir("/var/tmp")
 
-
-          command = "cp /var/tmp/"+data_file+" ./"+data_file
+          command = "cp ./"+data_file+" "+current_dirdata_file
           print command
           subprocess.call([command])
 
           command = "swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
           print command
           subprocess.call([command])
+
+          os.chdir(current_dir)
 
           ##
 
