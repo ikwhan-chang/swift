@@ -77,6 +77,7 @@ from functools import partial
 
 from PIL import Image
 import os
+import subprocess
 
 from subprocess import call
 COMPRESSED_IMAGE_QUALITY = 20
@@ -1546,7 +1547,7 @@ class BaseDiskFileWriter(object):
         print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
 
-        #call(["mv", "-l"])
+        subprocess.call(["rm", target_path])
 
         print "AAAAAAAAA"
         # Convert image into binary file
