@@ -1559,12 +1559,12 @@ class BaseDiskFileWriter(object):
           subprocess.call([command])
 
           command = "cp /var/tmp/"+data_file+" ./"+data_file
-        print command
-        subprocess.call([command])
+          print command
+          subprocess.call([command])
 
-        command = "swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
-        print command
-        subprocess.call([command])
+          command = "swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
+          print command
+          subprocess.call([command])
 
           ##
 
