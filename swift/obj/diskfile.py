@@ -1517,42 +1517,43 @@ class BaseDiskFileWriter(object):
 
         print "Name "+ str(metadata['name'])
 
-        ##
+        if !("_compressed" in metadata['name']):
+          ##
 
-        # Check if file exists in system
-        if not (os.path.isfile(target_path)):
+          # Check if file exists in system
+          if not (os.path.isfile(target_path)):
 
-          print "File [{0}] does not exist!".format(target_path)
-        #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
+            print "File [{0}] does not exist!".format(target_path)
+          #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
 
-        image_name = target_path.split('/')[-1].replace('.data','')
+          image_name = target_path.split('/')[-1].replace('.data','')
 
-        # Convert image into binary file
-        fh = open(target_path,'rb')
-        data = fh.read()
-        fh.close()
+          # Convert image into binary file
+          fh = open(target_path,'rb')
+          data = fh.read()
+          fh.close()
 
-        data_file = image_name + '.jpg'
-        fh = open("/var/tmp/"+data_file,'w')
-        fh.write(data)
-        fh.close()
+          data_file = image_name + '.jpg'
+          fh = open("/var/tmp/"+data_file,'w')
+          fh.write(data)
+          fh.close()
 
-        img_file = "/var/tmp/"+data_file
+          img_file = "/var/tmp/"+data_file
 
-        # Load image
-        img = Image.open(img_file)
-        size = os.stat(img_file).st_size
-        print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+          # Load image
+          img = Image.open(img_file)
+          size = os.stat(img_file).st_size
+          print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
-        # Save the compressed image
-        #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-        img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-        size = os.stat(img_file).st_size
-        print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+          # Save the compressed image
+          #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
+          img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+          size = os.stat(img_file).st_size
+          print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
-        subprocess.call(["swift", "-A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed /var/tmp/"+image_name+"_compressed.jpg"])
+          subprocess.call(["swift", "-A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed /var/tmp/"+image_name+"_compressed.jpg"])
 
-        ##
+          ##
 
         self._put_succeeded = True
         if cleanup:
