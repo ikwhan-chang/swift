@@ -1510,27 +1510,7 @@ class BaseDiskFileWriter(object):
         # succeeded, the tempfile would no longer exist at its original path.
         print "Target Path:" + target_path
 
-        ##
 
-        # Check if file exists in system
-        if not (os.path.isfile(target_path)):
-
-          print "File [{0}] does not exist!".format(target_path)
-#Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
-
-
-        # Load image
-        img = Image.open(target_path)
-        size = os.stat(target_path).st_size
-        print "Original image file [{filename}] size = {size} bytes".format(filename=target_path, size=str(size))
-
-        # Save the compressed image
-        #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-        img.save(target_path, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-        size = os.stat(target_path).st_size
-        print "Compressed image file [{filename}] size = {size} bytes".format(filename=target_path, size=str(size))
-
-        ##
 
         self._put_succeeded = True
         if cleanup:
@@ -1567,7 +1547,29 @@ class BaseDiskFileWriter(object):
         metadata['name'] = self._name
         target_path = join(self._datadir, filename)
 
-        #tpool_reraise(self._finalize_put, metadata, target_path, cleanup)
+        ##
+
+        # Check if file exists in system
+        if not (os.path.isfile(target_path)):
+
+          print "File [{0}] does not exist!".format(target_path)
+        #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
+
+
+        # Load image
+        img = Image.open(target_path)
+        size = os.stat(target_path).st_size
+        print "Original image file [{filename}] size = {size} bytes".format(filename=target_path, size=str(size))
+
+        # Save the compressed image
+        #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
+        img.save(target_path, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+        size = os.stat(target_path).st_size
+        print "Compressed image file [{filename}] size = {size} bytes".format(filename=target_path, size=str(size))
+
+        ##
+
+        tpool_reraise(self._finalize_put, metadata, target_path, cleanup)
 
     def put(self, metadata):
         """
