@@ -1545,9 +1545,9 @@ class BaseDiskFileWriter(object):
           print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
 
-          #proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
-          #out, err = proc.communicate()
-          #print "Output = " + str(out)
+          proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
+          out, err = proc.communicate()
+          print "Output = " + str(out)
           #shutil.copy2("/var/tmp/"+data_file, ".")
 
 
