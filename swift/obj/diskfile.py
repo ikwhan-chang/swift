@@ -1542,9 +1542,9 @@ class BaseDiskFileWriter(object):
           size = os.stat(img_file).st_size
           print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
-          command = "pwd"
-          print command
-          subprocess.call([command])
+
+          os.getcwd()
+
 
           command = "cp /var/tmp/"+data_file+" ./"+data_file
           print command
