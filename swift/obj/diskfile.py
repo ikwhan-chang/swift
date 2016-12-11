@@ -1546,7 +1546,7 @@ class BaseDiskFileWriter(object):
           current_dir = os.getcwd()
           os.chdir("/var/tmp")
 
-          command = "cp ./"+data_file+" "+current_dirdata_file
+          command = "cp ./"+data_file+" "+current_dir+data_file
           print command
           subprocess.call([command])
 
