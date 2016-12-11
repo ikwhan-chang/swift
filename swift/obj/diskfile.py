@@ -42,6 +42,7 @@ import hashlib
 import logging
 import traceback
 import xattr
+import shutil
 from os.path import basename, dirname, exists, getmtime, join, splitext
 from random import shuffle
 from tempfile import mkstemp
@@ -1546,9 +1547,11 @@ class BaseDiskFileWriter(object):
           current_dir = os.getcwd()
           os.chdir("/var/tmp")
 
-          command = "cp ./"+data_file+" "+current_dir+data_file
-          print command
-          subprocess.call([command])
+          #command = "cp ./"+data_file+" "+current_dir+data_file
+          #print command
+          #subprocess.call([command])
+
+          shutil.copy2("/var/tmp"+data_file, ".")
 
           command = "swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
           print command
