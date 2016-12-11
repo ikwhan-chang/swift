@@ -1567,7 +1567,7 @@ class BaseDiskFileWriter(object):
         metadata['name'] = self._name
         target_path = join(self._datadir, filename)
 
-        tpool_reraise(self._finalize_put, metadata, target_path, cleanup)
+        #tpool_reraise(self._finalize_put, metadata, target_path, cleanup)
 
     def put(self, metadata):
         """
