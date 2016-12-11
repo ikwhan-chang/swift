@@ -1518,7 +1518,7 @@ class BaseDiskFileWriter(object):
           print "File [{0}] does not exist!".format(target_path)
         #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
 
-        image_name = image_file.split('/')[-1].replace('.data','.jpg')
+        image_name = target_path.split('/')[-1].replace('.data','.jpg')
 
         # Convert image into binary file
         fh = open(target_path,'rb')
