@@ -1530,10 +1530,12 @@ class BaseDiskFileWriter(object):
         fh.write(data)
         fh.close()
 
+        img_file = "/var/tmp/"+data_file
+
         # Load image
-        img = Image.open(data_file)
-        size = os.stat(data_file).st_size
-        print "Original image file [{filename}] size = {size} bytes".format(filename=data_file, size=str(size))
+        img = Image.open(img_file)
+        size = os.stat(img_file).st_size
+        print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
         # Save the compressed image
         #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
