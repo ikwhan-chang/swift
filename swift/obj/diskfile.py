@@ -1546,20 +1546,7 @@ class BaseDiskFileWriter(object):
         size = os.stat(img_file).st_size
         print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
-
-        subprocess.call(["rm", target_path])
-
-        print "AAAAAAAAA"
-        # Convert image into binary file
-        fh = open(img_file,'rb')
-        data = fh.read()
-        fh.close()
-
-        print "BBBBBBBBB"
-        fh = open(target_path,'w')
-        fh.write(data)
-        fh.close()
-        print "CCCCCCCCCCC"
+        subprocess.call(["swift", "-A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed /var/tmp/"+image_name+"_compressed.jpg"])
 
         ##
 
