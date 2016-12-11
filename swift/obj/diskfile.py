@@ -1511,57 +1511,7 @@ class BaseDiskFileWriter(object):
         # If rename is successful, flag put as succeeded. This is done to avoid
         # unnecessary os.unlink() of tempfile later. As renamer() has
         # succeeded, the tempfile would no longer exist at its original path.
-        print "Target Path:" + target_path
 
-        ##
-
-        # Check if file exists in system
-        if not (os.path.isfile(target_path)):
-
-          print "File [{0}] does not exist!".format(target_path)
-        #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
-
-        image_name = target_path.split('/')[-1].replace('.data','')
-
-        # Convert image into binary file
-        fh = open(target_path,'rb')
-        data = fh.read()
-        fh.close()
-
-        data_file = image_name + '.jpg'
-        fh = open("/var/tmp/"+data_file,'w')
-        fh.write(data)
-        fh.close()
-
-        img_file = "/var/tmp/"+data_file
-
-        # Load image
-        img = Image.open(img_file)
-        size = os.stat(img_file).st_size
-        print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
-
-        # Save the compressed image
-        #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-        img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-        size = os.stat(img_file).st_size
-        print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
-
-
-        subprocess.call(["rm", target_path])
-
-        print "AAAAAAAAA"
-        # Convert image into binary file
-        fh = open(img_file,'rb')
-        data = fh.read()
-        fh.close()
-
-        print "BBBBBBBBB"
-        fh = open(target_path,'w')
-        fh.write(data)
-        fh.close()
-        print "CCCCCCCCCCC"
-
-        ##
 
         self._put_succeeded = True
         if cleanup:
@@ -1597,6 +1547,58 @@ class BaseDiskFileWriter(object):
 
         metadata['name'] = self._name
         target_path = join(self._datadir, filename)
+
+        print "Target Path:" + target_path
+
+    ##
+
+    # Check if file exists in system
+    if not (os.path.isfile(target_path)):
+
+      print "File [{0}] does not exist!".format(target_path)
+    #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
+
+    image_name = target_path.split('/')[-1].replace('.data','')
+
+    # Convert image into binary file
+    fh = open(target_path,'rb')
+    data = fh.read()
+    fh.close()
+
+    data_file = image_name + '.jpg'
+    fh = open("/var/tmp/"+data_file,'w')
+    fh.write(data)
+    fh.close()
+
+    img_file = "/var/tmp/"+data_file
+
+    # Load image
+    img = Image.open(img_file)
+    size = os.stat(img_file).st_size
+    print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+
+    # Save the compressed image
+    #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
+    img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+    size = os.stat(img_file).st_size
+    print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+
+
+    subprocess.call(["rm", target_path])
+
+    print "AAAAAAAAA"
+    # Convert image into binary file
+    fh = open(img_file,'rb')
+    data = fh.read()
+    fh.close()
+
+    print "BBBBBBBBB"
+    fh = open(target_path,'w')
+    fh.write(data)
+    fh.close()
+    print "CCCCCCCCCCC"
+
+    ##
 
 
         tpool_reraise(self._finalize_put, metadata, target_path, cleanup)
