@@ -1510,8 +1510,6 @@ class BaseDiskFileWriter(object):
         # succeeded, the tempfile would no longer exist at its original path.
         print "Target Path:" + target_path
 
-        target_path = join(self._datadir, filename)
-
         ##
 
         # Check if file exists in system
