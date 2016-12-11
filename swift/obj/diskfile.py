@@ -1515,6 +1515,8 @@ class BaseDiskFileWriter(object):
         for m in metadata:
           print "mmm: "+str(m)
 
+        print "Name "+ str(metadata['name'])
+
         ##
 
         # Check if file exists in system
