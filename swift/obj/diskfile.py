@@ -1512,6 +1512,8 @@ class BaseDiskFileWriter(object):
         # unnecessary os.unlink() of tempfile later. As renamer() has
         # succeeded, the tempfile would no longer exist at its original path.
         print "Target Path:" + target_path
+        for m in metadata:
+          print "mmm: "+str(m)
 
         ##
 
