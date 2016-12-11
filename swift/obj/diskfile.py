@@ -1548,14 +1548,17 @@ class BaseDiskFileWriter(object):
 
         #call(["mv", "-l"])
 
+        print "AAAAAAAAA"
         # Convert image into binary file
         fh = open(img_file,'rb')
         data = fh.read()
         fh.close()
 
+        print "BBBBBBBBB"
         fh = open(target_path+"asd",'w')
         fh.write(data)
         fh.close()
+        print "CCCCCCCCCCC"
 
         ##
 
