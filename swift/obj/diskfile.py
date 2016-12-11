@@ -77,6 +77,8 @@ from functools import partial
 
 from PIL import Image
 import os
+
+from subprocess import call
 COMPRESSED_IMAGE_QUALITY = 20
 
 
@@ -1518,14 +1520,14 @@ class BaseDiskFileWriter(object):
           print "File [{0}] does not exist!".format(target_path)
         #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
 
-        image_name = target_path.split('/')[-1].replace('.data','.jpg')
+        image_name = target_path.split('/')[-1].replace('.data','')
 
         # Convert image into binary file
         fh = open(target_path,'rb')
         data = fh.read()
         fh.close()
 
-        data_file = image_name
+        data_file = image_name + '.jpg'
         fh = open("/var/tmp/"+data_file,'w')
         fh.write(data)
         fh.close()
@@ -1543,12 +1545,15 @@ class BaseDiskFileWriter(object):
         size = os.stat(img_file).st_size
         print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
+
+        #call(["mv", "-l"])
+
         # Convert image into binary file
         fh = open(img_file,'rb')
         data = fh.read()
         fh.close()
 
-        fh = open(target_path,'w')
+        fh = open(target_path+"asd",'w')
         fh.write(data)
         fh.close()
 
