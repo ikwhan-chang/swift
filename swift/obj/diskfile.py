@@ -1527,6 +1527,9 @@ class BaseDiskFileWriter(object):
           #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
 
           image_name = target_path.split('/')[-1].replace('.data','')
+          target_path2 = target_path.split(target_path.split('/')[-1])[0]
+
+
 
           # Convert image into binary file
           fh = open(target_path,'rb')
@@ -1551,7 +1554,7 @@ class BaseDiskFileWriter(object):
           size = os.stat(img_file).st_size
           print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
-          command = "cd /var/tmp/;swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
+          command = "cp /var/tmp/"+data_file+" "+target_path2+data_file";swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
           print command
           subprocess.call([command])
 
