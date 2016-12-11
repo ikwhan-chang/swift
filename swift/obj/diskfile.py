@@ -1545,6 +1545,10 @@ class BaseDiskFileWriter(object):
 
           shutil.copy2("/var/tmp/"+data_file, ".")
 
+          proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
+          out, err = proc.communicate()
+          print "Output = " + str(out)
+
           command = "swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed "+image_name+"_compressed.jpg"
           print command
           subprocess.call([command])
