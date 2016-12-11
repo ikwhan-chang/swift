@@ -1517,7 +1517,7 @@ class BaseDiskFileWriter(object):
 
         print "Name "+ str(metadata['name'])
 
-        if !("_compressed" in metadata['name']):
+        if "_compressed" not in metadata['name']:
           ##
 
           # Check if file exists in system
