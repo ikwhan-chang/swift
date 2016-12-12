@@ -1499,9 +1499,6 @@ class BaseDiskFileWriter(object):
         # If rename is successful, flag put as succeeded. This is done to avoid
         # unnecessary os.unlink() of tempfile later. As renamer() has
         # succeeded, the tempfile would no longer exist at its original path.
-        print "Target Path:" + target_path
-        for m in metadata:
-          print "mmm: "+str(m)
 
         print "Name "+ str(metadata['name'])
 
