@@ -3287,6 +3287,7 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
       original_image_name = metadata['name'].split('/')[-1].replace('.jpg','')
       image_name = target_path.split('/')[-1].replace('.data','')
 
+
       # Convert image into binary file
       fh = open(target_path,'rb')
       data = fh.read()
@@ -3296,6 +3297,9 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
       fh = open(tmp_file,'w')
       fh.write(data)
       fh.close()
+
+      if not (os.path.isfile(tmp_file)):
+        print "File [{0}] does not exist!".format(tmp_file)
 
       # Load image
       img = Image.open(tmp_file)
