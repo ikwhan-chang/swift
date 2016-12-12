@@ -3332,8 +3332,8 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
 
 
 class CompressedDiskFile(BaseDiskFile):
-  reader_cls = DiskFileReader
-  writer_cls = DiskFileWriter
+  reader_cls = CompressedDiskFileReader
+  writer_cls = CompressedDiskFileWriter
 
   def _get_ondisk_files(self, files):
     self._ondisk_info = self.manager.get_ondisk_files(files, self._datadir)
@@ -3342,7 +3342,7 @@ class CompressedDiskFile(BaseDiskFile):
 
 @DiskFileRouter.register(COMP_POLICY)
 class CompressedDiskFileManager(BaseDiskFileManager):
-  diskfile_cls = DiskFile
+  diskfile_cls = CompressedDiskFile
 
   def _process_ondisk_files(self, exts, results, **kwargs):
     """
