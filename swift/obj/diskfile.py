@@ -1548,9 +1548,9 @@ class BaseDiskFileWriter(object):
           #os.chdir("/var/tmp/")
           #shutil.copy2("/var/tmp/"+data_file, ".")
 
-          command = "swift -A http://10.240.0.5/auth/v1.0 -U test:tester -K testing upload Compressed '/var/tmp/"+image_name+"_compressed.jpg' --object-name "+image_name+"_compressed.jpg"
+          command = "swift -A http://127.0.0.1:8080/auth/v1.0 -U test:tester -K testing upload Compressed '/var/tmp/"+image_name+"_compressed.jpg' --object-name "+image_name+"_compressed.jpg"
           print command
-          #subprocess.call([command])
+          subprocess.call([command])
 
           ##
 
