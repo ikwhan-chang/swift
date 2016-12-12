@@ -3282,42 +3282,32 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
         print "File [{0}] does not exist!".format(target_path)
       #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
 
+      original_image_name = metadata['name'].split('/')[-1].replace('.jpg','')
       image_name = target_path.split('/')[-1].replace('.data','')
-      target_path2 = target_path.split(target_path.split('/')[-1])[0]
-
-
 
       # Convert image into binary file
       fh = open(target_path,'rb')
       data = fh.read()
       fh.close()
 
-      data_file = image_name + '_compressed.jpg'
-      fh = open("/var/tmp/"+data_file,'w')
+      tmp_file = "/var/tmp/"+original_image_name + '_compressed.jpg'
+      fh = open(tmp_file,'w')
       fh.write(data)
       fh.close()
 
-      img_file = "/var/tmp/"+data_file
-
       # Load image
-      img = Image.open(img_file)
-      size = os.stat(img_file).st_size
+      img = Image.open(tmp_file)
+      size = os.stat(tmp_file).st_size
       print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
       # Save the compressed image
       #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
 
-      img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-      size = os.stat(img_file).st_size
+      img.save(tmp_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+      size = os.stat(tmp_file).st_size
       print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
 
-      proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
-      out, err = proc.communicate()
-      print "Output = " + str(out)
-      #os.chdir("/var/tmp/")
-      #shutil.copy2("/var/tmp/"+data_file, ".")
-
-      command = "swift -A http://127.0.0.1:8080/auth/v1.0 -U test:tester -K testing upload Compressed '/var/tmp/"+image_name+"_compressed.jpg' --object-name "+image_name+"_compressed.jpg"
+      command = "swift -A http://127.0.0.1:8080/auth/v1.0 -U test:tester -K testing upload Compressed "+tmp_file+" --object-name "+original_image_name+"_compressed.jpg"
       print command
       subprocess.call([command])
 
