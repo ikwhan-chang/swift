@@ -77,6 +77,7 @@ from swift.common.storage_policy import (
 from functools import partial
 
 from PIL import Image
+from PIL import ImageFile
 import os
 import subprocess
 
