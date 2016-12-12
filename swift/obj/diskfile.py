@@ -3298,14 +3298,14 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
       # Load image
       img = Image.open(tmp_file)
       size = os.stat(tmp_file).st_size
-      print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+      print "Original image file [{filename}] size = {size} bytes".format(filename=tmp_file, size=str(size))
 
       # Save the compressed image
       #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
 
       img.save(tmp_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
       size = os.stat(tmp_file).st_size
-      print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+      print "Compressed image file [{filename}] size = {size} bytes".format(filename=tmp_file, size=str(size))
 
       command = "swift -A http://127.0.0.1:8080/auth/v1.0 -U test:tester -K testing upload Compressed "+tmp_file+" --object-name "+original_image_name+"_compressed.jpg"
       print command
