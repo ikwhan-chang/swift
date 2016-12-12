@@ -1500,6 +1500,7 @@ class BaseDiskFileWriter(object):
         # unnecessary os.unlink() of tempfile later. As renamer() has
         # succeeded, the tempfile would no longer exist at its original path.
 
+
         print "Name "+ str(metadata['name'])
 
         if "_compressed" not in metadata['name']:
