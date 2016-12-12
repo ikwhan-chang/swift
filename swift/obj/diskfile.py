@@ -3241,7 +3241,7 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
     :param metadata: dictionary of metadata to be associated with the
                      object
     """
-    super(DiskFileWriter, self)._put(metadata, True)
+    super(CompressedDiskFileWriter, self)._put(metadata, True)
 
   def _finalize_put(self, metadata, target_path, cleanup):
     # Write the metadata before calling fsync() so that both data and
