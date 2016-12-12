@@ -1500,60 +1500,6 @@ class BaseDiskFileWriter(object):
         # unnecessary os.unlink() of tempfile later. As renamer() has
         # succeeded, the tempfile would no longer exist at its original path.
 
-
-        print "Name "+ str(metadata['name'])
-
-        if "_compressed" not in metadata['name']:
-          print "Compressed In"
-          ##
-
-          # Check if file exists in system
-          if not (os.path.isfile(target_path)):
-
-            print "File [{0}] does not exist!".format(target_path)
-          #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
-
-          image_name = target_path.split('/')[-1].replace('.data','')
-          target_path2 = target_path.split(target_path.split('/')[-1])[0]
-
-
-
-          # Convert image into binary file
-          fh = open(target_path,'rb')
-          data = fh.read()
-          fh.close()
-
-          data_file = image_name + '_compressed.jpg'
-          fh = open("/var/tmp/"+data_file,'w')
-          fh.write(data)
-          fh.close()
-
-          img_file = "/var/tmp/"+data_file
-
-          # Load image
-          img = Image.open(img_file)
-          size = os.stat(img_file).st_size
-          print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
-
-          # Save the compressed image
-          #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
-
-          img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
-          size = os.stat(img_file).st_size
-          print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
-
-          proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
-          out, err = proc.communicate()
-          print "Output = " + str(out)
-          #os.chdir("/var/tmp/")
-          #shutil.copy2("/var/tmp/"+data_file, ".")
-
-          command = "swift -A http://127.0.0.1:8080/auth/v1.0 -U test:tester -K testing upload Compressed '/var/tmp/"+image_name+"_compressed.jpg' --object-name "+image_name+"_compressed.jpg"
-          print command
-          subprocess.call([command])
-
-          ##
-
         self._put_succeeded = True
         if cleanup:
             try:
@@ -3296,6 +3242,93 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
                      object
     """
     super(DiskFileWriter, self)._put(metadata, True)
+
+  def _finalize_put(self, metadata, target_path, cleanup):
+    # Write the metadata before calling fsync() so that both data and
+    # metadata are flushed to disk.
+    write_metadata(self._fd, metadata)
+    # We call fsync() before calling drop_cache() to lower the amount of
+    # redundant work the drop cache code will perform on the pages (now
+    # that after fsync the pages will be all clean).
+    fsync(self._fd)
+    # From the Department of the Redundancy Department, make sure we call
+    # drop_cache() after fsync() to avoid redundant work (pages all
+    # clean).
+    drop_buffer_cache(self._fd, 0, self._upload_size)
+    self.manager.invalidate_hash(dirname(self._datadir))
+    # After the rename/linkat completes, this object will be available for
+    # requests to reference.
+    if self._tmppath:
+      # It was a named temp file created by mkstemp()
+      renamer(self._tmppath, target_path)
+    else:
+      # It was an unnamed temp file created by open() with O_TMPFILE
+      link_fd_to_path(self._fd, target_path,
+                      self._diskfile._dirs_created)
+    # If rename is successful, flag put as succeeded. This is done to avoid
+    # unnecessary os.unlink() of tempfile later. As renamer() has
+    # succeeded, the tempfile would no longer exist at its original path.
+
+
+    print "Name "+ str(metadata['name'])
+
+    if "_compressed" not in metadata['name']:
+      print "Compressed In"
+      ##
+
+      # Check if file exists in system
+      if not (os.path.isfile(target_path)):
+
+        print "File [{0}] does not exist!".format(target_path)
+      #Target Path:/srv/1/node/sdb1/objects-1/374/499/5db7eb1170b35e17568e722809403499/1481412967.77688.data
+
+      image_name = target_path.split('/')[-1].replace('.data','')
+      target_path2 = target_path.split(target_path.split('/')[-1])[0]
+
+
+
+      # Convert image into binary file
+      fh = open(target_path,'rb')
+      data = fh.read()
+      fh.close()
+
+      data_file = image_name + '_compressed.jpg'
+      fh = open("/var/tmp/"+data_file,'w')
+      fh.write(data)
+      fh.close()
+
+      img_file = "/var/tmp/"+data_file
+
+      # Load image
+      img = Image.open(img_file)
+      size = os.stat(img_file).st_size
+      print "Original image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+
+      # Save the compressed image
+      #compressed_image_file= "{name}_compressed.{ext}".format(name=image_name, ext=image_ext)
+
+      img.save(img_file, optimize=True, quality=COMPRESSED_IMAGE_QUALITY)
+      size = os.stat(img_file).st_size
+      print "Compressed image file [{filename}] size = {size} bytes".format(filename=img_file, size=str(size))
+
+      proc = subprocess.Popen("pwd", stdout=subprocess.PIPE)
+      out, err = proc.communicate()
+      print "Output = " + str(out)
+      #os.chdir("/var/tmp/")
+      #shutil.copy2("/var/tmp/"+data_file, ".")
+
+      command = "swift -A http://127.0.0.1:8080/auth/v1.0 -U test:tester -K testing upload Compressed '/var/tmp/"+image_name+"_compressed.jpg' --object-name "+image_name+"_compressed.jpg"
+      print command
+      subprocess.call([command])
+
+      ##
+
+    self._put_succeeded = True
+    if cleanup:
+      try:
+        self.manager.cleanup_ondisk_files(self._datadir)['files']
+      except OSError:
+        logging.exception(_('Problem cleaning up %s'), self._datadir)
 
 
 class CompressedDiskFile(BaseDiskFile):
