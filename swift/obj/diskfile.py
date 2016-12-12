@@ -3312,7 +3312,7 @@ class CompressedDiskFileWriter(BaseDiskFileWriter):
       #command = "swift -A http://127.0.0.1:8080/auth/v1.0 -U test:tester -K testing upload Compressed "+tmp_file+" --object-name "+original_image_name+"_compressed.jpg"
       command = "/home/CMPE297/swift/swift/uploadAgain.sh "+tmp_file+" "+original_image_name+"_compressed.jpg"
       print command
-      #subprocess.call([command])
+      subprocess.call([command], shell=True)
 
       ##
 
